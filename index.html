@@ -401,6 +401,21 @@
     .success-state p {
       color: var(--text-muted);
     }
+    .download-link {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 14px 28px;
+      background: var(--accent);
+      color: white;
+      font-weight: 700;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .download-link:hover {
+      background: var(--accent2);
+      transform: translateY(-2px);
+    }
 
     @media (max-width: 640px) {
       .hero-stats { gap: 20px; }
@@ -467,6 +482,7 @@
         <div class="icon">✅</div>
         <h3>Check your inbox!</h3>
         <p>The guide is on its way. Check your email in the next few minutes.</p>
+        <a href="/docs/guide.html" download class="download-link" onclick="setTimeout(() => { document.getElementById('successState').innerHTML = '<div class=icon>📩</div><h3>Questions?</h3><p>Reply to the email or <a href=https://twitter.com/reinoutbuwalda>DM me on X</a>.</p>', 3000); }">Download PDF Now →</a>
       </div>
     </div>
   </div>
