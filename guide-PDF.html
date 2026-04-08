@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Agents for E-commerce Marketplace Sellers</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --accent: #7c6bff;
+      --accent2: #ff6b8a;
+      --accent3: #6bffb8;
+      --dark: #0a0a0f;
+      --surface: #13131a;
+      --text: #f0f0f5;
+      --text-muted: #8888a0;
+    }
+
+    @media print {
+      body { background: white; color: #1a1a1a; }
+      .page-break { page-break-before: always; }
+      .no-print { display: none; }
+    }
+
+    @page {
+      size: A4;
+      margin: 20mm 15mm;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      font-size: 11pt;
+      line-height: 1.6;
+    }
+
+    /* ===== COVER PAGE ===== */
+    .cover {
+      min-height: 297mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px;
+      background: linear-gradient(135deg, #0a0a0f 0%, #13131a 100%);
+      position: relative;
+    }
+
+    .cover::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background:
+        radial-gradient(ellipse at 20% 30%, rgba(124,107,255,0.2) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, rgba(255,107,138,0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(107,255,184,0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .cover-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(124,107,255,0.15);
+      border: 1px solid rgba(124,107,255,0.3);
+      border-radius: 100px;
+      padding: 8px 20px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cover h1 {
+      font-size: 48pt;
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cover h1 span {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 50%, var(--accent3) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .cover .subtitle {
+      font-size: 14pt;
+      color: var(--text-muted);
+      max-width: 500px;
+      margin-bottom: 60px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cover-stats {
+      display: flex;
+      gap: 40px;
+      margin-bottom: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cover-stat { text-align: center; }
+    .cover-stat .num {
+      font-size: 36pt;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .cover-stat .label {
+      font-size: 9pt;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 4px;
+    }
+
+    .cover-footer {
+      font-size: 10pt;
+      color: var(--text-muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== TOC PAGE ===== */
+    .toc-page {
+      padding: 40px;
+      background: var(--dark);
+    }
+
+    .toc-page h2 {
+      font-size: 11pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #2a2a3a;
+    }
+
+    .toc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 40px;
+    }
+
+    .toc-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #1c1c26;
+      font-size: 10pt;
+    }
+
+    .toc-item .name { font-weight: 600; }
+    .toc-item .count {
+      font-size: 9pt;
+      color: var(--text-muted);
+      background: var(--surface);
+      border-radius: 100px;
+      padding: 2px 10px;
+    }
+
+    /* ===== CONTENT ===== */
+    .content {
+      padding: 40px;
+      background: var(--dark);
+    }
+
+    .chapter {
+      margin-bottom: 48px;
+    }
+
+    .chapter-header {
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .chapter-number {
+      font-size: 9pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .chapter-title {
+      font-size: 22pt;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .chapter-intro {
+      color: var(--text-muted);
+      font-size: 10pt;
+      margin-top: 8px;
+    }
+
+    /* USECASE BLOCK */
+    .usecase {
+      background: var(--surface);
+      border: 1px solid #2a2a3a;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .usecase-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .usecase-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .usecase h3 {
+      font-size: 12pt;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .usecase-category {
+      font-size: 8pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+    }
+
+    .usecase p {
+      font-size: 10pt;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+
+    .usecase-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .usecase-detail {
+      background: var(--dark);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .usecase-detail .label {
+      font-size: 8pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .usecase-detail .value {
+      font-size: 9pt;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    /* SUMMARY TABLE */
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 9pt;
+    }
+
+    .summary-table th {
+      background: var(--accent);
+      color: white;
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 8pt;
+    }
+
+    .summary-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #2a2a3a;
+      vertical-align: top;
+    }
+
+    .summary-table tr:nth-child(even) td {
+      background: rgba(255,255,255,0.02);
+    }
+
+    /* CTA PAGE */
+    .cta-page {
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      margin: 40px;
+    }
+
+    .cta-page h2 {
+      font-size: 20pt;
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+
+    .cta-page p {
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .cta-page .cta-box {
+      background: var(--dark);
+      border-radius: 12px;
+      padding: 24px;
+      display: inline-block;
+    }
+
+    /* PAGE NUMBER */
+    .page-num {
+      position: fixed;
+      bottom: 20px;
+      right: 30px;
+      font-size: 9pt;
+      color: var(--text-muted);
+    }
+
+    /* HIGHLIGHT BOX */
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(124,107,255,0.15), rgba(255,107,138,0.1));
+      border: 1px solid rgba(124,107,255,0.3);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .highlight-box .label {
+      font-size: 8pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .highlight-box p {
+      font-size: 10pt;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== COVER PAGE ===== -->
+<div class="cover">
+  <div class="cover-badge">Free Guide · 2026 Edition</div>
+  <h1>AI Agents for<br><span>E-commerce<br>Marketplace Sellers</span></h1>
+  <p class="subtitle">32 proven ways to automate product research, pricing, content, customer service, and operations using AI agents.</p>
+  <div class="cover-stats">
+    <div class="cover-stat">
+      <div class="num">32</div>
+      <div class="label">Use Cases</div>
+    </div>
+    <div class="cover-stat">
+      <div class="num">8</div>
+      <div class="label">Categories</div>
+    </div>
+    <div class="cover-stat">
+      <div class="num">100%</div>
+      <div class="label">Actionable</div>
+    </div>
+  </div>
+  <div class="cover-footer">For Amazon, Bol.com, Kaufland, and European marketplace sellers</div>
+</div>
+
+<div style="page-break-after: always;"></div>
+
+<!-- ===== TABLE OF CONTENTS ===== -->
+<div class="toc-page">
+  <h2>What's Inside</h2>
+  <div class="toc-grid">
+    <div class="toc-item"><span class="name">🔬 Product Research & Sourcing</span><span class="count">5</span></div>
+    <div class="toc-item"><span class="name">💲 Pricing & Margin Management</span><span class="count">4</span></div>
+    <div class="toc-item"><span class="name">✏️ Content & Listing Optimization</span><span class="count">5</span></div>
+    <div class="toc-item"><span class="name">🎧 Customer Service & CX</span><span class="count">4</span></div>
+    <div class="toc-item"><span class="name">📦 Inventory & Operations</span><span class="count">4</span></div>
+    <div class="toc-item"><span class="name">📢 Advertising & Marketing</span><span class="count">4</span></div>
+    <div class="toc-item"><span class="name">📈 Analytics & Intelligence</span><span class="count">4</span></div>
+    <div class="toc-item"><span class="name">🛡️ Account Health & Compliance</span><span class="count">2</span></div>
+  </div>
+
+  <div class="highlight-box" style="margin-top: 32px;">
+    <div class="label">How to Use This Guide</div>
+    <p>Each use case follows the same structure: <strong>What it does</strong>, <strong>Why it matters</strong>, <strong>Tools you need</strong>, and <strong>Real workflow example</strong>. Start with the categories most relevant to your current bottleneck. The highest-ROI starting points for most sellers are Dynamic Repricing (#7), Shipment Reconciliation (#21), Buyer Message Triage (#15), and Weekly Business Review (#27).</p>
+  </div>
+</div>
+
+<div style="page-break-after: always;"></div>
+
+<!-- ===== CONTENT ===== -->
+<div class="content">
+
+<!-- CHAPTER 1: PRODUCT RESEARCH -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-number">Chapter 1</div>
+    <div class="chapter-title">🔬 Product Research & Sourcing</div>
+    <div class="chapter-intro">Find winning products faster, qualify suppliers automatically, and spot trends before your competitors do.</div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(124,107,255,0.2);">🎯</div>
+      <div>
+        <h3>1. Opportunity Scout</h3>
+        <div class="usecase-category">Product Research</div>
+      </div>
+    </div>
+    <p>Monitors BSR (Best Seller Rank) shifts, new product launches, and search volume trends across Amazon, Bol.com, and Kaufland daily. Flags categories where top-10 listings are weak — low reviews, poor images, thin content — meaning you can win with a better listing.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Finds blue-ocean niches before they become red ocean. Saves weeks of manual research.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">Jungle Scout API, Keepa API, Helium 10 API, Claude for scoring logic</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(255,107,138,0.2);">🔎</div>
+      <div>
+        <h3>2. Competitor Reverse-Engineering Agent</h3>
+        <div class="usecase-category">Product Research</div>
+      </div>
+    </div>
+    <p>Takes a competitor ASIN/EAN and reverse-engineers their full strategy: supplier (via import records), margin estimate, keyword set, review velocity, and ad spend estimate. Outputs a "should we compete?" scorecard.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Removes guesswork from competition decisions. Quantifies whether a category is worth entering.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">ImportYeti, Keepa, Helium 10 Cerebro, Claude</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(107,255,184,0.2);">🏭</div>
+      <div>
+        <h3>3. Alibaba Supplier Qualifier</h3>
+        <div class="usecase-category">Product Research</div>
+      </div>
+    </div>
+    <p>Given a product spec, scrapes Alibaba/Made-in-China, cross-references supplier ratings, MOQ, certifications (CE, RoHS), and lead times. Sends RFQ emails automatically, collects responses, and ranks suppliers by risk/cost.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Turns weeks of supplier vetting into hours. Reduces the risk of bad suppliers costing you money.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">Firecrawl, Gmail, Claude, Airtable</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(255,200,60,0.2);">📈</div>
+      <div>
+        <h3>4. Trend-to-Product Pipeline</h3>
+        <div class="usecase-category">Product Research</div>
+      </div>
+    </div>
+    <p>Monitors TikTok hashtags, Reddit subs, Pinterest boards, and Google Trends for emerging product trends. When a trend crosses a velocity threshold, auto-generates a product brief with target price point, key features, and first-mover window estimate.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Catches trends before they hit mainstream. First mover advantage = better BSR, cheaper PPC.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">Firecrawl, Reddit API, Google Trends API, Claude</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(60,180,255,0.2);">⚖️</div>
+      <div>
+        <h3>5. Patent & Trademark Clearance Agent</h3>
+        <div class="usecase-category">Product Research</div>
+      </div>
+    </div>
+    <p>Before sourcing a product, checks USPTO/EUIPO for design patents, word marks, and utility patents on the product category. Flags risk items and suggests design-arounds before you invest.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Prevents costly inventory seizures and legal battles. A €200 search saves a €50,000 mistake.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">USPTO API, EUIPO API, Claude</div></div>
+    </div>
+  </div>
+</div>
+
+<div style="page-break-after: always;"></div>
+
+<!-- CHAPTER 2: PRICING -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-number">Chapter 2</div>
+    <div class="chapter-title">💲 Pricing & Margin Management</div>
+    <div class="chapter-intro">Protect your margin at scale. Never lose the Buy Box at the wrong price again.</div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(124,107,255,0.2);">⚡</div>
+      <div>
+        <h3>6. Dynamic Repricing Agent</h3>
+        <div class="usecase-category">Pricing</div>
+      </div>
+    </div>
+    <p>Monitors Buy Box ownership every 15 minutes. Adjusts price using rules: win Buy Box if margin > X%, hold price if already winning, pull back if a competitor goes below your floor. Incorporates your exact landed cost per unit (FBA fees, VAT, ad spend).</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Most repricers use generic rules. This one uses YOUR actual margins. You stop leaving money on the table.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">Amazon SP-API, Bol.com API, your ERP, Claude for edge cases</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(255,107,138,0.2);">📉</div>
+      <div>
+        <h3>7. Fee Erosion Detector</h3>
+        <div class="usecase-category">Pricing</div>
+      </div>
+    </div>
+    <p>Runs monthly reconciliation of every Amazon/Bol.com fee line: FBA storage, long-term storage, return fees, referral fees. Flags anomalies vs. prior month and vs. category benchmarks. Identifies products where fees silently ate margins over time.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Amazon's fees change constantly. Most sellers don't notice until their margin is already gone.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">Amazon SP-API Finance endpoints, Claude for anomaly detection</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(107,255,184,0.2);">🔄</div>
+      <div>
+        <h3>8. Cross-Marketplace Price Parity Agent</h3>
+        <div class="usecase-category">Pricing</div>
+      </div>
+    </div>
+    <p>Ensures your prices stay consistent across Amazon DE/NL/FR, Bol.com, and Kaufland to avoid MAP violations or marketplace suspensions. Auto-adjusts when currency fluctuates or a marketplace auto-reprices you.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">One MAP violation can get you suspended. This agent enforces your price floor automatically.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">SP-API, Bol.com Retailer API, Kaufland API, FX rates API</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(255,200,60,0.2);">📊</div>
+      <div>
+        <h3>9. Promo ROI Forecaster</h3>
+        <div class="usecase-category">Pricing</div>
+      </div>
+    </div>
+    <p>Before you run a Lightning Deal or Bol.com Spotlight, calculates expected sales lift (using your BSR elasticity curve), ad cost, deal fee, and inventory consumption. Outputs go/no-go with expected net profit delta.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Many deals lose money. This gives you the numbers before you commit inventory.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">Keepa historical data, your margin sheet, Claude</div></div>
+    </div>
+  </div>
+</div>
+
+<div style="page-break-after: always;"></div>
+
+<!-- CHAPTER 3: CONTENT -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-number">Chapter 3</div>
+    <div class="chapter-title">✏️ Content & Listing Optimization</div>
+    <div class="chapter-intro">Win the algorithm and convert more buyers with listings built by AI that actually understands your product.</div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(124,107,255,0.2);">✍️</div>
+      <div>
+        <h3>10. Full-Funnel Listing Writer</h3>
+        <div class="usecase-category">Content</div>
+      </div>
+    </div>
+    <p>Creates title, 5 bullets, description, A+ content copy, and backend search terms from: a product spec sheet, top-10 competitor listings, and a keyword universe. Outputs per-marketplace variants (Amazon DE vs. NL vs. FR vs. Bol.com — each with correct character limits and buyer language).</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">A great listing is a permanent traffic source. This generates them at scale, not one-by-one.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">Helium 10 Magnet, Claude, your brand guidelines</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(255,107,138,0.2);">🔍</div>
+      <div>
+        <h3>11. Listing Audit Agent</h3>
+        <div class="usecase-category">Content</div>
+      </div>
+    </div>
+    <p>Weekly crawl of all your live listings. Checks: keyword indexing, image count/quality score, A+ content present, review score trend, suppression risk, Buy Box %, and content vs. competitor gap. Produces a prioritized fix list ranked by revenue impact.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Most listings degrade over time. This catches problems before they cost you ranking.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">Amazon SP-API, Helium 10, Firecrawl, Claude</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(107,255,184,0.2);">📸</div>
+      <div>
+        <h3>12. Image Brief Generator</h3>
+        <div class="usecase-category">Content</div>
+      </div>
+    </div>
+    <p>Analyzes top-converting competitor images using vision AI. Identifies which lifestyle shots, infographics, size charts, and USP callouts they use. Generates a photographer/designer brief specifying exact shots needed, text overlays, and ordering logic.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Most sellers guess at images. This tells you exactly what converts in your category.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">Claude Vision, Firecrawl, Figma API</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(255,200,60,0.2);">💬</div>
+      <div>
+        <h3>13. Review-to-Copy Feedback Loop</h3>
+        <div class="usecase-category">Content</div>
+      </div>
+    </div>
+    <p>Extracts voice-of-customer language from your 1-3 star reviews and your top competitors' reviews. Identifies unmet expectations and frequently mentioned features. Feeds findings back into listing copy and product development briefs.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Your buyers tell you exactly what they want. This turns that signal into copy that converts.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">Amazon SP-API reviews endpoint, Claude NLP, Notion</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(60,180,255,0.2);">🌍</div>
+      <div>
+        <h3>14. Multilingual Localization Agent</h3>
+        <div class="usecase-category">Content</div>
+      </div>
+    </div>
+    <p>Translates and culturally adapts listings from EN → DE → NL → FR → IT. Not just word-for-word — it adjusts idioms, benefit framing, and compliance language per country. Flags regulatory terms (e.g., German Impressum requirements).</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Bad translations kill conversions in DE and FR. Native-sounding copy from day one.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">Claude, DeepL API, marketplace-specific style guides</div></div>
+    </div>
+  </div>
+</div>
+
+<div style="page-break-after: always;"></div>
+
+<!-- CHAPTER 4: CUSTOMER SERVICE -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-number">Chapter 4</div>
+    <div class="chapter-title">🎧 Customer Service & CX</div>
+    <div class="chapter-intro">Scale your customer service without adding headcount. Let AI handle the routine, your team handles the exceptions.</div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(124,107,255,0.2);">🤖</div>
+      <div>
+        <h3>15. Buyer Message Triage & Response Agent</h3>
+        <div class="usecase-category">Customer Service</div>
+      </div>
+    </div>
+    <p>Reads incoming buyer messages across all marketplaces, classifies intent (return, defect, tracking, complaint, question), drafts a response using your SOP playbooks, and either auto-sends for simple cases or queues for human review for refunds and A-to-Z claims.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Response time directly impacts seller rating. This ensures every message gets a professional reply within hours.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">Amazon SP-API Messaging, Bol.com Retailer API, Claude, your SOP docs</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(255,107,138,0.2);">⭐</div>
+      <div>
+        <h3>16. Negative Review Response Agent</h3>
+        <div class="usecase-category">Customer Service</div>
+      </div>
+    </div>
+    <p>Monitors for new 1-2 star reviews. Within 24h, drafts a brand-appropriate, empathetic public response. For verified buyers, triggers a proactive outreach email offering resolution. Tracks whether reviews get updated.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">30% of negative reviewers update their review after a good response. This recovers ratings automatically.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">SP-API, Bol.com API, Gmail, Claude</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(107,255,184,0.2);">📦</div>
+      <div>
+        <h3>17. Return Reason Classifier</h3>
+        <div class="usecase-category">Customer Service</div>
+      </div>
+    </div>
+    <p>Tags every return with a root cause: defect, buyer remorse, wrong item, size issue, expectation mismatch. Builds a monthly report linking return reasons to listing copy gaps or product quality issues. Triggers alerts when a return reason spikes.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">High return rates trigger Amazon investigations. This catches product problems before they become account health issues.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">SP-API Returns API, Claude, your WMS</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(255,200,60,0.2);">🛡️</div>
+      <div>
+        <h3>18. A-to-Z / Chargeback Defense Agent</h3>
+        <div class="usecase-category">Customer Service</div>
+      </div>
+    </div>
+    <p>When an A-to-Z claim is filed, auto-assembles the defense package: tracking proof, delivery confirmation, prior buyer messages, order details. Drafts the appeal letter in the format Amazon's team expects.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">A-to-Z claims affect your order defect rate. Winning them keeps your account healthy.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">SP-API, shipping carrier APIs, Claude</div></div>
+    </div>
+  </div>
+</div>
+
+<div style="page-break-after: always;"></div>
+
+<!-- CHAPTER 5: INVENTORY -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-number">Chapter 5</div>
+    <div class="chapter-header">
+    <div class="chapter-title">📦 Inventory & Operations</div>
+    <div class="chapter-intro">Prevent stockouts, recover money Amazon owes you, and automate the coordination between your warehouse, 3PL, and marketplaces.</div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(124,107,255,0.2);">🔄</div>
+      <div><h3>19. Reorder Point Calculator</h3><div class="usecase-category">Operations</div></div>
+    </div>
+    <p>Calculates per-SKU reorder points using: current velocity (units/day), supplier lead time, FBA inbound processing time, safety stock buffer, and seasonal multiplier. Fires a Slack alert + draft PO when stock hits the threshold.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Stockouts kill BSR permanently. Better reorder math = fewer lost sales.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">SP-API Inventory, your ERP, Claude, Slack</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(255,107,138,0.2);">💀</div>
+      <div><h3>20. Stranded & Suppressed Inventory Hunter</h3><div class="usecase-category">Operations</div></div>
+    </div>
+    <p>Daily scan for: stranded FBA inventory, suppressed listings, unfulfillable units, and long-term storage fee candidates. Auto-generates removal orders for dead stock or reprices aggressively to sell through before LTS fees hit.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Suppressed listings don't get found. LTS fees silently erode your margin month after month.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">SP-API, Claude, your repricing rules</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(107,255,184,0.2);">💸</div>
+      <div><h3>21. Shipment Reconciliation Agent</h3><div class="usecase-category">Operations</div></div>
+    </div>
+    <p>After every FBA inbound shipment closes, reconciles units shipped vs. units received. Files reimbursement claims for discrepancies within Amazon's claim window (9 months). Tracks claim status and escalates stalled claims.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Amazon loses 1-3% of inventory in transit. This money is sitting in your Seller Central — claim it.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">SP-API FBA Inbound, Amazon Reimbursement API, Claude</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(60,180,255,0.2);">🚚</div>
+      <div><h3>22. 3PL Coordination Agent</h3><div class="usecase-category">Operations</div></div>
+    </div>
+    <p>When an order comes in for a channel not served by FBA (your webshop, Kaufland MFN), sends pick-and-pack instructions to your 3PL via their API, tracks fulfillment, and updates the marketplace with tracking info automatically.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Manual 3PL coordination is error-prone and doesn't scale. Automate the handoff.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">3PL API (e.g., Byrd, Shiphero), Kaufland API, Claude</div></div>
+    </div>
+  </div>
+</div>
+
+<div style="page-break-after: always;"></div>
+
+<!-- CHAPTER 6: ADVERTISING -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-number">Chapter 6</div>
+    <div class="chapter-title">📢 Advertising & Marketing</div>
+    <div class="chapter-intro">Lower your TACOS, scale your ad spend profitably, and drive external traffic that earns you Amazon's brand referral bonus.</div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(124,107,255,0.2);">🎯</div>
+      <div><h3>23. PPC Campaign Architect</h3><div class="usecase-category">Advertising</div></div>
+    </div>
+    <p>Builds Amazon Sponsored Products campaigns from scratch using: your keyword universe, competitor ASINs for targeting, bid landscape data, and budget. Sets up proper campaign structure (exact/phrase/broad + ASIN targeting) with dayparting rules.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Campaign structure determines your ACOS. A well-built campaign from day one beats months of optimization.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">Amazon Ads API, Helium 10, Claude</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(255,107,138,0.2);">🔄</div>
+      <div><h3>24. Search Term Harvester</h3><div class="usecase-category">Advertising</div></div>
+    </div>
+    <p>Weekly: pulls Search Term Reports, identifies converting long-tail terms not yet in exact campaigns, and negative keywords burning spend with zero conversions. Outputs ready-to-upload bulk file for Amazon Ads.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Search terms change weekly. This ensures you're always harvesting new opportunities before competitors do.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">Amazon Ads API, Claude, Google Sheets</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(107,255,184,0.2);">🌐</div>
+      <div><h3>25. External Traffic Agent</h3><div class="usecase-category">Advertising</div></div>
+    </div>
+    <p>Monitors your Brand Referral Bonus credits (Amazon gives 10% back for external traffic). Identifies which products have highest margin + RoI for Meta/Google ads. Drafts ad copy and UTM-tagged landing page URLs. Tracks TACOS impact weekly.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">10% brand referral bonus on every external sale. Free money if you're already driving traffic.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">Amazon Attribution API, Meta Ads API, Claude</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(255,200,60,0.2);">🎬</div>
+      <div><h3>26. Influencer/Creator Outreach Agent</h3><div class="usecase-category">Advertising</div></div>
+    </div>
+    <p>Finds micro-influencers on TikTok/Instagram in your product niche with >2% engagement rate and <500k followers. Drafts personalized outreach, tracks responses, and manages product seeding logistics.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Micro-influencer content converts better than ads and builds long-term brand awareness.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">Firecrawl, Instagram/TikTok APIs, Gmail, Claude</div></div>
+    </div>
+  </div>
+</div>
+
+<div style="page-break-after: always;"></div>
+
+<!-- CHAPTER 7: ANALYTICS -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-number">Chapter 7</div>
+    <div class="chapter-title">📈 Analytics & Intelligence</div>
+    <div class="chapter-intro">See problems before they hurt your P&L. Get insights that take hours to compile — in minutes.</div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(124,107,255,0.2);">📊</div>
+      <div><h3>27. Weekly Business Review (WBR) Generator</h3><div class="usecase-category">Analytics</div></div>
+    </div>
+    <p>Every Monday at 06:00, pulls revenue, units, TACOS, BSR, review count, Buy Box %, return rate, and margin per SKU. Compares to prior week, prior month, and YoY. Writes a narrative summary flagging what's up, what's down, and why.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Most sellers fly blind. This turns raw data into decisions — without opening 10 spreadsheets.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">SP-API, Amazon Ads API, Claude, Notion/Google Slides</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(255,107,138,0.2);">🚨</div>
+      <div><h3>28. Margin Erosion Early Warning</h3><div class="usecase-category">Analytics</div></div>
+    </div>
+    <p>Monitors your net margin per ASIN daily. When margin drops >3pp vs. 30-day average, auto-diagnoses cause: fee increase, price drop, COGS change, or ad spend spike. Sends alert with root cause and suggested action.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Margin erosion is silent until it's catastrophic. Catching it at 3% vs 15% is the difference between a quick fix and a crisis.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">SP-API Finance, Ads API, your ERP, Claude</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(107,255,184,0.2);">📈</div>
+      <div><h3>29. Category Ranking Tracker</h3><div class="usecase-category">Analytics</div></div>
+    </div>
+    <p>Tracks your BSR in main category + 3 subcategories, and your top 5 competitors' BSRs, daily. Detects when a competitor is running a promo (sudden BSR spike) so you can decide whether to match or hold.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Competitor promos hit your BSR. Knowing in real-time lets you respond — not react after the fact.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">Keepa API, Claude</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(60,180,255,0.2);">📋</div>
+      <div><h3>30. Regulatory Change Monitor</h3><div class="usecase-category">Analytics</div></div>
+    </div>
+    <p>Watches EU/NL/DE regulatory feeds, Amazon policy update pages, and Bol.com seller news for changes affecting your product categories (CE marking, GPSR, battery regulations, labeling rules). Sends digest with impact assessment.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Non-compliance fines are expensive. Regulatory changes are predictable — if you monitor them.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">Firecrawl, EUR-Lex RSS, Amazon Policy pages, Claude</div></div>
+    </div>
+  </div>
+</div>
+
+<div style="page-break-after: always;"></div>
+
+<!-- CHAPTER 8: COMPLIANCE -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-number">Chapter 8</div>
+    <div class="chapter-title">🛡️ Account Health & Compliance</div>
+    <div class="chapter-intro">Stay in business. These agents prevent the problems that get sellers suspended.</div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(124,107,255,0.2);">❤️‍🩹</div>
+      <div><h3>31. Account Health Dashboard Agent</h3><div class="usecase-category">Compliance</div></div>
+    </div>
+    <p>Daily check of Amazon Account Health: ODR, Late Shipment Rate, Valid Tracking Rate, Policy violations. Triggers playbook if any metric is within 20% of the threshold. For Bol.com: tracks NPS score and on-time delivery rate.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Account suspensions are expensive and hard to recover from. Prevention beats cure.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">SP-API Account Health API, Bol.com Retailer API, Claude</div></div>
+    </div>
+  </div>
+
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background: rgba(255,107,138,0.2);">⚔️</div>
+      <div><h3>32. ASIN Hijacking Alert</h3><div class="usecase-category">Compliance</div></div>
+    </div>
+    <p>Monitors your listings for unauthorized 3P sellers (hijackers). When detected, immediately sends cease-and-desist template to the seller, files a brand registry complaint, and documents the incident. Tracks resolution.</p>
+    <div class="usecase-grid">
+      <div class="usecase-detail"><div class="label">Why It Matters</div><div class="value">Hijackers steal the Buy Box and your revenue. Fast action = fast recovery.</div></div>
+      <div class="usecase-detail"><div class="label">Tools Needed</div><div class="value">SP-API, Amazon Brand Registry API, Gmail, Claude</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SUMMARY TABLE -->
+<div style="page-break-after: always; padding: 40px; background: var(--dark);">
+  <h2 style="font-size: 18pt; font-weight: 900; margin-bottom: 20px;">Summary: All 32 Use Cases</h2>
+  <table class="summary-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Use Case</th>
+        <th>Category</th>
+        <th>Core Value</th>
+        <th>Complexity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Opportunity Scout</td><td>Product Research</td><td>Find blue oceans faster</td><td>Medium</td></tr>
+      <tr><td>2</td><td>Competitor Reverse-Engineering</td><td>Product Research</td><td>Know before you compete</td><td>Medium</td></tr>
+      <tr><td>3</td><td>Alibaba Supplier Qualifier</td><td>Product Research</td><td>Reduce supplier risk</td><td>Low</td></tr>
+      <tr><td>4</td><td>Trend-to-Product Pipeline</td><td>Product Research</td><td>First mover advantage</td><td>High</td></tr>
+      <tr><td>5</td><td>Patent Clearance Agent</td><td>Product Research</td><td>Prevent costly legal issues</td><td>Low</td></tr>
+      <tr><td>6</td><td>Dynamic Repricing Agent</td><td>Pricing</td><td>Never lose Buy Box at wrong price</td><td>High</td></tr>
+      <tr><td>7</td><td>Fee Erosion Detector</td><td>Pricing</td><td>Recover margin silently lost</td><td>Medium</td></tr>
+      <tr><td>8</td><td>Cross-Marketplace Price Parity</td><td>Pricing</td><td>Prevent MAP violations</td><td>Medium</td></tr>
+      <tr><td>9</td><td>Promo ROI Forecaster</td><td>Pricing</td><td>Know deal profitability upfront</td><td>Medium</td></tr>
+      <tr><td>10</td><td>Full-Funnel Listing Writer</td><td>Content</td><td>Scale listing quality</td><td>Medium</td></tr>
+      <tr><td>11</td><td>Listing Audit Agent</td><td>Content</td><td>Prioritized content fixes</td><td>Low</td></tr>
+      <tr><td>12</td><td>Image Brief Generator</td><td>Content</td><td>Know what images convert</td><td>Medium</td></tr>
+      <tr><td>13</td><td>Review-to-Copy Feedback Loop</td><td>Content</td><td>Voice-of-customer copywriting</td><td>Medium</td></tr>
+      <tr><td>14</td><td>Multilingual Localization</td><td>Content</td><td>Native-quality foreign listings</td><td>Medium</td></tr>
+      <tr><td>15</td><td>Buyer Message Triage</td><td>Customer Service</td><td>Scale support without headcount</td><td>Medium</td></tr>
+      <tr><td>16</td><td>Negative Review Response</td><td>Customer Service</td><td>Recover ratings automatically</td><td>Low</td></tr>
+      <tr><td>17</td><td>Return Reason Classifier</td><td>Customer Service</td><td>Catch product problems early</td><td>Medium</td></tr>
+      <tr><td>18</td><td>A-to-Z Defense Agent</td><td>Customer Service</td><td>Protect account health</td><td>Medium</td></tr>
+      <tr><td>19</td><td>Reorder Point Calculator</td><td>Operations</td><td>Prevent stockouts</td><td>Medium</td></tr>
+      <tr><td>20</td><td>Stranded Inventory Hunter</td><td>Operations</td><td>Maximize findable inventory</td><td>Low</td></tr>
+      <tr><td>21</td><td>Shipment Reconciliation</td><td>Operations</td><td>Claim Amazon's missing inventory</td><td>Medium</td></tr>
+      <tr><td>22</td><td>3PL Coordination Agent</td><td>Operations</td><td>Scale multi-channel fulfillment</td><td>High</td></tr>
+      <tr><td>23</td><td>PPC Campaign Architect</td><td>Advertising</td><td>Build campaigns that scale cleanly</td><td>High</td></tr>
+      <tr><td>24</td><td>Search Term Harvester</td><td>Advertising</td><td>Always harvesting new terms</td><td>Low</td></tr>
+      <tr><td>25</td><td>External Traffic Agent</td><td>Advertising</td><td>Earn Amazon's 10% referral bonus</td><td>Medium</td></tr>
+      <tr><td>26</td><td>Influencer Outreach Agent</td><td>Advertising</td><td>Scale UGC content</td><td>High</td></tr>
+      <tr><td>27</td><td>Weekly Business Review</td><td>Analytics</td><td>Decision-ready Monday morning</td><td>Low</td></tr>
+      <tr><td>28</td><td>Margin Erosion Early Warning</td><td>Analytics</td><td>Catch problems before crisis</td><td>Medium</td></tr>
+      <tr><td>29</td><td>Category Ranking Tracker</td><td>Analytics</td><td>Competitor promo detection</td><td>Low</td></tr>
+      <tr><td>30</td><td>Regulatory Change Monitor</td><td>Analytics</td><td>Stay compliant proactively</td><td>Medium</td></tr>
+      <tr><td>31</td><td>Account Health Dashboard</td><td>Compliance</td><td>Prevent suspension</td><td>Low</td></tr>
+      <tr><td>32</td><td>ASIN Hijacking Alert</td><td>Compliance</td><td>Protect revenue from hijackers</td><td>Medium</td></tr>
+    </tbody>
+  </table>
+
+  <div class="highlight-box" style="margin-top: 32px;">
+    <div class="label">Where to Start</div>
+    <p><strong>Highest ROI, lowest complexity:</strong> #27 (WBR), #15 (Message Triage), #21 (Shipment Reconciliation), #11 (Listing Audit), #24 (Search Term Harvester). These pay for themselves in weeks, not months.</p>
+    <p style="margin-top: 8px;"><strong>Highest impact, more complex:</strong> #6 (Repricing), #23 (PPC Architect), #10 (Listing Writer). These require more setup but fundamentally change how you compete.</p>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
